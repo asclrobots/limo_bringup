@@ -1,59 +1,59 @@
 amcl:
   ros__parameters:
-    use_sim_time: False
-    alpha1: 0.2
-    alpha2: 0.2
-    alpha3: 0.2
-    alpha4: 0.2
-    alpha5: 0.2
-    base_frame_id: "base_link"
-    beam_skip_distance: 0.5
-    beam_skip_error_threshold: 0.9
-    beam_skip_threshold: 0.3
-    do_beamskip: false
-    global_frame_id: "map"
-    lambda_short: 0.1
-    laser_likelihood_max_dist: 2.0
-    laser_max_range: 100.0
-    laser_min_range: -1.0
-    laser_model_type: "likelihood_field"
-    max_beams: 60
-    max_particles: 2000
-    min_particles: 500
-    odom_frame_id: "odom"
-    pf_err: 0.05
-    pf_z: 0.99
-    recovery_alpha_fast: 0.0
-    recovery_alpha_slow: 0.0
-    resample_interval: 1
-    robot_model_type: "differential"
-    save_pose_rate: 0.5
-    sigma_hit: 0.2
-    tf_broadcast: true
-    transform_tolerance: 1.0
-    update_min_a: 0.2
-    update_min_d: 0.25
-    z_hit: 0.5
-    z_max: 0.05
-    z_rand: 0.5
-    z_short: 0.05
+    use_sim_time: False  # Use simulation time if true
+    alpha1: 0.2  # Rotational noise from rotation
+    alpha2: 0.2  # Rotational noise from translation
+    alpha3: 0.2  # Translational noise from translation
+    alpha4: 0.2  # Translational noise from rotation
+    alpha5: 0.2  # Translational noise from translation (if using omni model)
+    base_frame_id: "base_link"  # Robot's base frame
+    beam_skip_distance: 0.5  # Skip beams that are closer than this distance
+    beam_skip_error_threshold: 0.9  # Error threshold for skipping beams
+    beam_skip_threshold: 0.3  # Threshold for skipping beams
+    do_beamskip: false  # Whether to perform beam skipping
+    global_frame_id: "map"  # The global frame
+    lambda_short: 0.1  # Weight for short measurements in the likelihood field model
+    laser_likelihood_max_dist: 2.0  # Max distance for likelihood field model
+    laser_max_range: 100.0  # Maximum laser scan range
+    laser_min_range: -1.0  # Minimum laser scan range
+    laser_model_type: "likelihood_field"  # Laser model to use
+    max_beams: 60  # Max number of beams to use from a scan
+    max_particles: 2000  # Maximum number of particles
+    min_particles: 500  # Minimum number of particles
+    odom_frame_id: "odom"  # The odometry frame
+    pf_err: 0.05  # Particle filter error
+    pf_z: 0.99  # Particle filter z value
+    recovery_alpha_fast: 0.0  # Fast recovery alpha for particle filter
+    recovery_alpha_slow: 0.0  # Slow recovery alpha for particle filter
+    resample_interval: 1  # Resample interval for particle filter
+    robot_model_type: "differential"  # Robot's motion model
+    save_pose_rate: 0.5  # Rate at which to save the pose
+    sigma_hit: 0.2  # Sigma for hit model in likelihood field
+    tf_broadcast: true  # Whether to broadcast the map to odom transform
+    transform_tolerance: 1.0  # Transform tolerance
+    update_min_a: 0.2  # Minimum angular update for filter update
+    update_min_d: 0.25  # Minimum distance update for filter update
+    z_hit: 0.5  # Weight for hits in the likelihood field model
+    z_max: 0.05  # Weight for max range measurements
+    z_rand: 0.5  # Weight for random measurements
+    z_short: 0.05  # Weight for short measurements
 
 amcl_map_client:
   ros__parameters:
-    use_sim_time: False
+    use_sim_time: False  # Use simulation time if true
 
 amcl_rclcpp_node:
   ros__parameters:
-    use_sim_time: False
+    use_sim_time: False  # Use simulation time if true
 
 bt_navigator:
   ros__parameters:
-    use_sim_time: False
-    global_frame: map
-    robot_base_frame: base_link
-    odom_topic: /odom
-    default_bt_xml_filename: "navigate_w_replanning_and_recovery.xml"
-    plugin_lib_names:
+    use_sim_time: False  # Use simulation time if true
+    global_frame: map  # The global frame for navigation
+    robot_base_frame: base_link  # Robot's base frame
+    odom_topic: /odom  # Topic for odometry messages
+    default_bt_xml_filename: "navigate_w_replanning_and_recovery.xml"  # Default behavior tree
+    plugin_lib_names:  # List of behavior tree node plugins
     - nav2_compute_path_to_pose_action_bt_node
     - nav2_follow_path_action_bt_node
     - nav2_back_up_action_bt_node
@@ -77,218 +77,216 @@ bt_navigator:
 
 bt_navigator_rclcpp_node:
   ros__parameters:
-    use_sim_time: False
+    use_sim_time: False  # Use simulation time if true
 
 controller_server:
   ros__parameters:
-    use_sim_time: False
-    controller_frequency: 10.0
-    min_x_velocity_threshold: 0.001
-    min_y_velocity_threshold: 0.5
-    min_theta_velocity_threshold: 0.001
-    controller_plugins: ["FollowPath"]
+    use_sim_time: False  # Use simulation time if true
+    controller_frequency: 10.0  # Frequency of the controller
+    min_x_velocity_threshold: 0.001  # Minimum x velocity threshold
+    min_y_velocity_threshold: 0.5  # Minimum y velocity threshold
+    min_theta_velocity_threshold: 0.001  # Minimum theta velocity threshold
+    controller_plugins: ["FollowPath"]  # List of controller plugins
 
-    # DWB parameters
+    # DWB parameters for the FollowPath plugin
     FollowPath:
-      plugin: "dwb_core::DWBLocalPlanner"
-      debug_trajectory_details: True
-      min_vel_x: 0.0
-      min_vel_y: 0.0
-      max_vel_x: 0.22
-      max_vel_y: 0.0
-      max_vel_theta: 0.8
-      min_speed_xy: 0.0
-      max_speed_xy: 0.44
-      min_speed_theta: 0.0
-      # Add high threshold velocity for turtlebot 3 issue.
-      # https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/75
-      acc_lim_x: 2.5
-      acc_lim_y: 0.0
-      acc_lim_theta: 0.2
-      decel_lim_x: -0.5
-      decel_lim_y: 0.0
-      decel_lim_theta: -0.5
-      vx_samples: 20
-      vy_samples: 0
-      vtheta_samples: 40
-      sim_time: 1.5
-      linear_granularity: 0.05
-      angular_granularity: 0.025
-      transform_tolerance: 0.2
-      xy_goal_tolerance: 0.05
-      trans_stopped_velocity: 0.25
-      short_circuit_trajectory_evaluation: True
-      stateful: True
-      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-      BaseObstacle.scale: 0.02
-      PathAlign.scale: 32.0
-      PathAlign.forward_point_distance: 0.1
-      GoalAlign.scale: 24.0
-      GoalAlign.forward_point_distance: 0.1
-      PathDist.scale: 32.0
-      GoalDist.scale: 24.0
-      RotateToGoal.scale: 32.0
-      RotateToGoal.slowing_factor: 5.0
-      RotateToGoal.lookahead_time: -1.0
+      plugin: "dwb_core::DWBLocalPlanner"  # DWB local planner plugin
+      debug_trajectory_details: True  # Publish debug trajectory details
+      min_vel_x: 0.0  # Minimum x velocity
+      min_vel_y: 0.0  # Minimum y velocity
+      max_vel_x: 0.22  # Maximum x velocity
+      max_vel_y: 0.0  # Maximum y velocity
+      max_vel_theta: 0.8  # Maximum theta velocity
+      min_speed_xy: 0.0  # Minimum xy speed
+      max_speed_xy: 0.44  # Maximum xy speed
+      min_speed_theta: 0.0  # Minimum theta speed
+      acc_lim_x: 2.5  # X acceleration limit
+      acc_lim_y: 0.0  # Y acceleration limit
+      acc_lim_theta: 0.2  # Theta acceleration limit
+      decel_lim_x: -0.5  # X deceleration limit
+      decel_lim_y: 0.0  # Y deceleration limit
+      decel_lim_theta: -0.5  # Theta deceleration limit
+      vx_samples: 20  # Velocity samples for x
+      vy_samples: 0  # Velocity samples for y
+      vtheta_samples: 40  # Velocity samples for theta
+      sim_time: 1.5  # Simulation time for trajectory generation
+      linear_granularity: 0.05  # Linear granularity for trajectory generation
+      angular_granularity: 0.025  # Angular granularity for trajectory generation
+      transform_tolerance: 0.2  # Transform tolerance
+      xy_goal_tolerance: 0.05  # Goal tolerance in xy
+      trans_stopped_velocity: 0.25  # Translational velocity at which the robot is considered stopped
+      short_circuit_trajectory_evaluation: True  # Whether to short circuit trajectory evaluation
+      stateful: True  # Whether the planner is stateful
+      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]  # Critics for trajectory evaluation
+      BaseObstacle.scale: 0.02  # Scale for BaseObstacle critic
+      PathAlign.scale: 32.0  # Scale for PathAlign critic
+      PathAlign.forward_point_distance: 0.1  # Forward point distance for PathAlign critic
+      GoalAlign.scale: 24.0  # Scale for GoalAlign critic
+      GoalAlign.forward_point_distance: 0.1  # Forward point distance for GoalAlign critic
+      PathDist.scale: 32.0  # Scale for PathDist critic
+      GoalDist.scale: 24.0  # Scale for GoalDist critic
+      RotateToGoal.scale: 32.0  # Scale for RotateToGoal critic
+      RotateToGoal.slowing_factor: 5.0  # Slowing factor for RotateToGoal critic
+      RotateToGoal.lookahead_time: -1.0  # Lookahead time for RotateToGoal critic
 
 controller_server_rclcpp_node:
   ros__parameters:
-    use_sim_time: False
+    use_sim_time: False  # Use simulation time if true
 
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
-      global_frame: odom
-      robot_base_frame: base_link
-      use_sim_time: False
-      rolling_window: true
-      width: 3
-      height: 3
-      resolution: 0.05
-      footprint: "[[0.15,0.10],[0.15,-0.10],[-0.15,-0.10],[-0.15,0.10]]"
-      plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]
+      update_frequency: 5.0  # Frequency of costmap updates
+      publish_frequency: 2.0  # Frequency of costmap publishing
+      global_frame: odom  # The global frame for the costmap
+      robot_base_frame: base_link  # Robot's base frame
+      use_sim_time: False  # Use simulation time if true
+      rolling_window: true  # Whether to use a rolling window
+      width: 3  # Width of the costmap
+      height: 3  # Height of the costmap
+      resolution: 0.05  # Resolution of the costmap
+      footprint: "[[0.15,0.10],[0.15,-0.10],[-0.15,-0.10],[-0.15,0.10]]"  # Robot's footprint
+      plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]  # Costmap layer plugins
       inflation_layer:
-        plugin: "nav2_costmap_2d::InflationLayer"
-        inflation_radius: 0.02
-        cost_scaling_factor: 3.0
+        plugin: "nav2_costmap_2d::InflationLayer"  # Inflation layer plugin
+        inflation_radius: 0.02  # Inflation radius
+        cost_scaling_factor: 3.0  # Cost scaling factor
       obstacle_layer:
-        plugin: "nav2_costmap_2d::ObstacleLayer"
-        enabled: True
-        observation_sources: scan
+        plugin: "nav2_costmap_2d::ObstacleLayer"  # Obstacle layer plugin
+        enabled: True  # Enable the layer
+        observation_sources: scan  # Observation sources
         scan:
-          topic: /scan
-          max_obstacle_height: 2.0
-          clearing: True
-          marking: True
-          data_type: "LaserScan"
+          topic: /scan  # Scan topic
+          max_obstacle_height: 2.0  # Max obstacle height
+          clearing: True  # Clearing observations
+          marking: True  # Marking observations
+          data_type: "LaserScan"  # Data type
       voxel_layer:
-        plugin: "nav2_costmap_2d::VoxelLayer"
-        enabled: True
-        publish_voxel_map: True
-        origin_z: 0.0
-        z_resolution: 0.05
-        z_voxels: 16
-        max_obstacle_height: 2.0
-        mark_threshold: 0
-        observation_sources: pointcloud
+        plugin: "nav2_costmap_2d::VoxelLayer"  # Voxel layer plugin
+        enabled: True  # Enable the layer
+        publish_voxel_map: True  # Publish voxel map
+        origin_z: 0.0  # Origin z
+        z_resolution: 0.05  # Z resolution
+        z_voxels: 16  # Z voxels
+        max_obstacle_height: 2.0  # Max obstacle height
+        mark_threshold: 0  # Mark threshold
+        observation_sources: pointcloud  # Observation sources
         pointcloud:
-          topic: /intel_realsense_r200_depth/points
-          max_obstacle_height: 2.0
-          clearing: True
-          marking: True
-          data_type: "PointCloud2"
+          topic: /intel_realsense_r200_depth/points  # Pointcloud topic
+          max_obstacle_height: 2.0  # Max obstacle height
+          clearing: True  # Clearing observations
+          marking: True  # Marking observations
+          data_type: "PointCloud2"  # Data type
       static_layer:
-        map_subscribe_transient_local: True
-      always_send_full_costmap: True
+        map_subscribe_transient_local: True  # Subscribe to map transiently
+      always_send_full_costmap: True  # Always send the full costmap
   local_costmap_client:
     ros__parameters:
-      use_sim_time: False
+      use_sim_time: False  # Use simulation time if true
   local_costmap_rclcpp_node:
     ros__parameters:
-      use_sim_time: False
+      use_sim_time: False  # Use simulation time if true
 
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
-      publish_frequency: 1.0
-      global_frame: map
-      robot_base_frame: base_link
-      use_sim_time: False
-      footprint: "[[0.15,0.10],[0.15,-0.10],[-0.15,-0.10],[-0.15,0.10]]"
-      resolution: 0.05
-      plugins: ["static_layer", "obstacle_layer", "voxel_layer", "inflation_layer"]
+      update_frequency: 1.0  # Frequency of costmap updates
+      publish_frequency: 1.0  # Frequency of costmap publishing
+      global_frame: map  # The global frame for the costmap
+      robot_base_frame: base_link  # Robot's base frame
+      use_sim_time: False  # Use simulation time if true
+      footprint: "[[0.15,0.10],[0.15,-0.10],[-0.15,-0.10],[-0.15,0.10]]"  # Robot's footprint
+      resolution: 0.05  # Resolution of the costmap
+      plugins: ["static_layer", "obstacle_layer", "voxel_layer", "inflation_layer"]  # Costmap layer plugins
       obstacle_layer:
-        plugin: "nav2_costmap_2d::ObstacleLayer"
-        enabled: True
-        observation_sources: scan
+        plugin: "nav2_costmap_2d::ObstacleLayer"  # Obstacle layer plugin
+        enabled: True  # Enable the layer
+        observation_sources: scan  # Observation sources
         scan:
-          topic: /scan
-          max_obstacle_height: 2.0
-          clearing: True
-          marking: True
-          data_type: "LaserScan"
+          topic: /scan  # Scan topic
+          max_obstacle_height: 2.0  # Max obstacle height
+          clearing: True  # Clearing observations
+          marking: True  # Marking observations
+          data_type: "LaserScan"  # Data type
       voxel_layer:
-        plugin: "nav2_costmap_2d::VoxelLayer"
-        enabled: True
-        publish_voxel_map: True
-        origin_z: 0.0
-        z_resolution: 0.05
-        z_voxels: 16
-        max_obstacle_height: 2.0
-        mark_threshold: 0
-        observation_sources: pointcloud
+        plugin: "nav2_costmap_2d::VoxelLayer"  # Voxel layer plugin
+        enabled: True  # Enable the layer
+        publish_voxel_map: True  # Publish voxel map
+        origin_z: 0.0  # Origin z
+        z_resolution: 0.05  # Z resolution
+        z_voxels: 16  # Z voxels
+        max_obstacle_height: 2.0  # Max obstacle height
+        mark_threshold: 0  # Mark threshold
+        observation_sources: pointcloud  # Observation sources
         pointcloud:
-          topic: /intel_realsense_r200_depth/points
-          max_obstacle_height: 2.0
-          clearing: True
-          marking: True
-          data_type: "PointCloud2"
+          topic: /intel_realsense_r200_depth/points  # Pointcloud topic
+          max_obstacle_height: 2.0  # Max obstacle height
+          clearing: True  # Clearing observations
+          marking: True  # Marking observations
+          data_type: "PointCloud2"  # Data type
       static_layer:
-        plugin: "nav2_costmap_2d::StaticLayer"
-        map_subscribe_transient_local: True
+        plugin: "nav2_costmap_2d::StaticLayer"  # Static layer plugin
+        map_subscribe_transient_local: True  # Subscribe to map transiently
       inflation_layer:
-        plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 1.0
-        inflation_radius: 0.15
-      always_send_full_costmap: True
+        plugin: "nav2_costmap_2d::InflationLayer"  # Inflation layer plugin
+        cost_scaling_factor: 1.0  # Cost scaling factor
+        inflation_radius: 0.15  # Inflation radius
+      always_send_full_costmap: True  # Always send the full costmap
   global_costmap_client:
     ros__parameters:
-      use_sim_time: False
+      use_sim_time: False  # Use simulation time if true
   global_costmap_rclcpp_node:
     ros__parameters:
-      use_sim_time: False
+      use_sim_time: False  # Use simulation time if true
 
 map_server:
   ros__parameters:
-    use_sim_time: False
-    yaml_filename: "turtlebot3_world.yaml"
+    use_sim_time: False  # Use simulation time if true
+    yaml_filename: "turtlebot3_world.yaml"  # Map YAML file
 
 map_saver:
   ros__parameters:
-    use_sim_time: False
-    save_map_timeout: 5000
-    free_thresh_default: 0.25
-    occupied_thresh_default: 0.65
+    use_sim_time: False  # Use simulation time if true
+    save_map_timeout: 5000  # Timeout for saving the map
+    free_thresh_default: 0.25  # Default free threshold
+    occupied_thresh_default: 0.65  # Default occupied threshold
 
 planner_server:
   ros__parameters:
-    expected_planner_frequency: 20.0
-    use_sim_time: False
-    planner_plugins: ["GridBased"]
+    expected_planner_frequency: 20.0  # Expected frequency of the planner
+    use_sim_time: False  # Use simulation time if true
+    planner_plugins: ["GridBased"]  # Planner plugins
     GridBased:
-      plugin: "nav2_navfn_planner/NavfnPlanner"
-      tolerance: 0.5
-      use_astar: false
-      allow_unknown: true
+      plugin: "nav2_navfn_planner/NavfnPlanner"  # NavFn planner plugin
+      tolerance: 0.5  # Goal tolerance
+      use_astar: false  # Whether to use A*
+      allow_unknown: true  # Whether to allow planning through unknown space
 
 planner_server_rclcpp_node:
   ros__parameters:
-    use_sim_time: False
+    use_sim_time: False  # Use simulation time if true
 
 recoveries_server:
   ros__parameters:
-    costmap_topic: local_costmap/costmap_raw
-    footprint_topic: local_costmap/published_footprint
-    cycle_frequency: 10.0
-    recovery_plugins: ["spin", "backup", "wait"]
+    costmap_topic: local_costmap/costmap_raw  # Costmap topic
+    footprint_topic: local_costmap/published_footprint  # Footprint topic
+    cycle_frequency: 10.0  # Frequency of recovery behaviors
+    recovery_plugins: ["spin", "backup", "wait"]  # Recovery behavior plugins
     spin:
-      plugin: "nav2_recoveries/Spin"
+      plugin: "nav2_recoveries/Spin"  # Spin recovery plugin
     backup:
-      plugin: "nav2_recoveries/BackUp"
+      plugin: "nav2_recoveries/BackUp"  # Backup recovery plugin
     wait:
-      plugin: "nav2_recoveries/Wait"
-    global_frame: odom
-    robot_base_frame: base_link
-    transform_timeout: 0.1
-    use_sim_time: False
-    simulate_ahead_time: 2.0
-    max_rotational_vel: 1.0
-    min_rotational_vel: 0.4
-    rotational_acc_lim: 3.2
+      plugin: "nav2_recoveries/Wait"  # Wait recovery plugin
+    global_frame: odom  # The global frame for recoveries
+    robot_base_frame: base_link  # Robot's base frame
+    transform_timeout: 0.1  # Transform timeout
+    use_sim_time: False  # Use simulation time if true
+    simulate_ahead_time: 2.0  # Time to simulate ahead for recoveries
+    max_rotational_vel: 1.0  # Max rotational velocity for recoveries
+    min_rotational_vel: 0.4  # Min rotational velocity for recoveries
+    rotational_acc_lim: 3.2  # Rotational acceleration limit for recoveries
 
 robot_state_publisher:
   ros__parameters:
-    use_sim_time: False
+    use_sim_time: False  # Use simulation time if true

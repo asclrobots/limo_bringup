@@ -13,18 +13,18 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
-        (os.path.join('share', package_name, 'param'), glob('param/*')),
+        (os.path.join('share', package_name, 'param'), glob('param/*.yaml')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='agilex',
-    maintainer_email='agilex@todo.todo',
+    maintainer='user',
+    maintainer_email='user@todo.todo',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'waypoint_follower = limo_bringup.waypoint_follower:main'
+            'waypoint_follower = limo_bringup.waypoint_follower:main',
         ],
     },
 )
